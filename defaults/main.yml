@@ -1,0 +1,47 @@
+---
+caddy_user: caddy
+caddy_conf_dir: /etc/caddy
+
+backends:
+  - host: "larvata.tw"
+    port: "80"
+    domains:
+      - name: www.larvata.tw
+        alias:
+          - larvata.tw
+          - official.larvata.tw
+        cert: /path/to/your/cert.pem
+        key: /path/to/your/privkey.pem
+      - name: example.com.tw
+    extra: |-2
+      header /api {
+        Access-Control-Allow-Origin  *
+        Access-Control-Allow-Methods "GET, POST, OPTIONS"
+        -Server
+      }
+
+# cluster_backends:
+#   - backends:
+#       - 1.2.3.4:8080
+#       - backend1.larvata.tw:80
+#       - backend2.larvata.tw:80
+#     hosts: |-
+#       http://larvata.tw https://larvata.tw,
+#       www.larvata.tw,
+#       official.larvata.tw
+#     extra: |-2
+#       header /api {
+#         Access-Control-Allow-Origin  *
+#         Access-Control-Allow-Methods "GET, POST, OPTIONS"
+#         -Server
+#       }
+#     cert: /path/to/your/cert.pem
+#     key: /path/to/your/privkey.pem
+
+# raw_entry: |-
+#   special.larvata.tw {
+#     proxy /v2 backend1.larvata.tw:5000 backend2.larvata.tw:5000 {
+#       header_upstream Docker-Distribution-Api-Version "registry/v2.0"
+#       transparent
+#     }
+#   }

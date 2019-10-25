@@ -1,0 +1,64 @@
+{% for backend in backends %}
+{% for domain in backend.domains %}
+{{ domain.name }} {
+{% if domain.tls is defined %}
+  {{ domain.tls | indent(2, False) }}
+{% else %}
+  tls {
+    protocols tls1.0 tls1.2
+    max_certs 10
+  }
+{% endif %}
+  proxy / {{ backend.host }}:{{ backend.port }} {
+    header_upstream Host {host}
+    header_upstream X-Real-IP {remote}
+    header_upstream X-Forwarded-For {remote}
+    header_upstream X-Forwarded-Proto {scheme}
+    websocket
+    transparent
+  }
+{% if backend.extra is defined %}
+  {{ backend.extra }}
+{% endif %}
+}
+
+{% if domain.alias is defined %}
+{% for alias in domain.alias %}
+http://{{ alias }} https://{{ alias }} {% endfor %} {
+  redir https://{{ domain.name }}
+}
+{% endif %}
+
+{% endfor %}
+{% endfor %}
+
+### Cluster Backends
+
+{% if cluster_backends is defined %}
+{% for cluster in cluster_backends %}
+{{ cluster.domains }} {
+  tls {
+    protocols tls1.0 tls1.2
+    max_certs 10
+  }
+  proxy / {% for backend in cluster.backends %}{{ backend }} {% endfor %} {
+    header_upstream Host {host}
+    header_upstream X-Real-IP {remote}
+    header_upstream X-Forwarded-For {remote}
+    header_upstream X-Forwarded-Proto {scheme}
+    websocket
+    transparent
+    policy round_robin
+  }
+{% if cluster.extra is defined %}
+  {{ cluster.extra }}
+{% endif %}
+}
+{% endfor %}
+{% endif %}
+
+### Raw Entries
+
+{% if raw_entry is defined %}
+  {{ raw_entry }}
+{% endif %}

@@ -1,0 +1,15 @@
+---
+- name: Ensure Caddyfile directory exists.
+  file:
+    path: "{{ caddy_conf_dir }}"
+    state: directory
+  register: ensure_caddyfile_directory
+
+- name: Add Caddyfile.
+  template:
+    src: Caddyfile.j2
+    dest: "{{ caddy_conf_dir }}/Caddyfile"
+    mode: 0644
+    owner: "{{ caddy_user }}"
+    backup: yes
+  notify: Restart Caddy With Systemd
