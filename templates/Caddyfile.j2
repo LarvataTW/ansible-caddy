@@ -6,7 +6,7 @@
 {% else %}
   tls {
     protocols tls1.0 tls1.2
-    ask 10
+    max_certs 10
   }
 {% endif %}
   proxy / {{ backend.host }}:{{ backend.port }} {
@@ -39,7 +39,7 @@ http://{{ alias }} https://{{ alias }} {% endfor %} {
 {{ cluster.domains }} {
   tls {
     protocols tls1.0 tls1.2
-    ask 10
+    max_certs 10
   }
   proxy / {% for backend in cluster.backends %}{{ backend }} {% endfor %} {
     header_upstream Host {host}
