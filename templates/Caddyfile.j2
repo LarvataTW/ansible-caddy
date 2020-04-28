@@ -20,6 +20,9 @@
 {% if backend.extra is defined %}
   {{ backend.extra }}
 {% endif %}
+{% if domain.extra is defined %}
+  {{ domain.extra | indent(2, False) }}
+{% endif %}
 }
 
 {% if domain.alias is defined %}
