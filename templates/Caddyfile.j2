@@ -5,7 +5,7 @@
   {{ domain.tls | indent(2, False) }}
 {% else %}
   tls {
-    protocols tls1.0 tls1.2
+    protocols tls1.2 tls1.3
     max_certs 10
   }
 {% endif %}
@@ -41,7 +41,7 @@ http://{{ alias }} https://{{ alias }} {% endfor %} {
 {% for cluster in cluster_backends %}
 {{ cluster.domains }} {
   tls {
-    protocols tls1.0 tls1.2
+    protocols tls1.2 tls1.3
     max_certs 10
   }
   proxy / {% for backend in cluster.backends %}{{ backend }} {% endfor %} {
