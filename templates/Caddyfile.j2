@@ -59,6 +59,7 @@ http://{{ alias }} https://{{ alias }} {% endfor %} {
     header_downstream X-Content-Type-Options nosniff
     websocket
     transparent
+    timeout 10m
     policy round_robin
   }
 {% if cluster.extra is defined %}
