@@ -27,7 +27,6 @@
 {% if domain.extra is defined %}
   {{ domain.extra | indent(2, False) }}
 {% endif %}
-  log / stdout "{combined} - {host}"
 }
 
 {% if domain.alias is defined %}
